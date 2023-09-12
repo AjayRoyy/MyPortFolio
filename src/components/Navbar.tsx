@@ -1,3 +1,4 @@
+import React, { useEffect, useRef } from "react";
 import {
   CustomListItems,
   RouterLinkStyled,
@@ -6,16 +7,25 @@ import Logo from "../Images/Ak Logo.png";
 import { NavRoutes } from "../routes/routes";
 import { Outlet } from "react-router-dom";
 import styled from "styled-components";
+import { useAppDispatch, useAppSelector } from "../redux/hooks";
+import { addRefToStore } from "../redux/slices/refSlice";
 
 type Props = {
   className?: string;
 };
 
 export const Navbar = ({ className }: Props) => {
+  const headerRef = useRef<HTMLElement | null>(null);
+  const navRef = useRef<HTMLElement | null>(null);
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    dispatch(addRefToStore({ headerRef: headerRef.current }));
+  }, []);
   return (
     <>
-      <header className={className}>
-        <nav className="container">
+      <header ref={headerRef} className={`${className}`}>
+        <nav ref={navRef} className="container">
           {NavRoutes &&
             NavRoutes.map((e, i) => (
               <RouterLinkStyled
@@ -44,6 +54,10 @@ export const Nav = styled(Navbar)`
   place-items: center;
   width: 100vw;
   height: 100px;
+  position: sticky;
+  top: 0;
+  left: 0;
+  z-index: 1;
 
   img {
     width: auto;

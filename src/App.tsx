@@ -4,10 +4,9 @@ import "./cursorStyle.scss";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import ErrorPage from "./Error-page";
 import { NavRoutes } from "./routes/routes";
-import { useAppDispatch } from "./redux/hooks";
-import { fetchProducts } from "./redux/slices/productsSlice";
 import { AppContainer } from "./style-components/CommonStyled";
 import { Nav } from "./components/Navbar";
+import { useAppSelector } from "./redux/hooks";
 
 const LazyComponents = (e: React.LazyExoticComponent<React.FC<{}>>) => {
   let LazyComp = e;
@@ -17,7 +16,6 @@ const LazyComponents = (e: React.LazyExoticComponent<React.FC<{}>>) => {
     </Suspense>
   );
 };
-
 const router = createBrowserRouter([
   {
     path: "/",
@@ -31,8 +29,11 @@ const router = createBrowserRouter([
 ]);
 
 const App: React.FC = (): JSX.Element => {
-  const dispatch = useAppDispatch();
   const cursorRef = useRef<HTMLDivElement | null>(null);
+  const appRef = useRef<HTMLDivElement | null>(null);
+  const headerRef = useAppSelector(
+    (state: any) => state.eleref.value.headerRef
+  );
 
   useEffect(() => {
     if (
@@ -62,11 +63,25 @@ const App: React.FC = (): JSX.Element => {
     });
   }, []);
 
+  useEffect(() => {
+    appRef.current!.onscroll = (e: any) => {
+      if (Math.floor(e.target.scrollTop) > 98) {
+        headerRef.style.transition = "2s linear";
+        headerRef.style.background =
+          "radial-gradient(ellipse at top, #1B2735 0%, #090A0F 100%)";
+      } else {
+        headerRef.style.background = "none";
+      }
+    };
+  }, [headerRef]);
+
   return (
-    <AppContainer className="App">
-      <div id="stars"></div>
-      <div id="stars2"></div>
-      <div id="stars3"></div>
+    <AppContainer ref={appRef} className="App">
+      <div className="fixed top-0 left-0">
+        <div id="stars"></div>
+        <div id="stars2"></div>
+        <div id="stars3"></div>
+      </div>
       <RouterProvider router={router} />
       <div ref={cursorRef} className="cursor"></div>
     </AppContainer>

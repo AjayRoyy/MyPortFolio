@@ -28,6 +28,8 @@ const Design = styled(SecondContainer)`
   order: 1;
 `;
 
+const Icons = ["1", "2", "3", "4", "5"];
+
 export const SocialMedia = (props: Props) => {
   return (
     <SocialMediaContainer>

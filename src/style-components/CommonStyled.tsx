@@ -53,4 +53,5 @@ export const RouterLinkStyled = styled(RouterLink)<{
   text-decoration: none;
   color: black;
   border-radius: 50px;
+  z-index: 1;
 `;

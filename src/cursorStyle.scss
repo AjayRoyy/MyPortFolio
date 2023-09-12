@@ -12,6 +12,7 @@
   transition-timing-function: ease-out;
   animation: cursorAnim 0.5s infinite alternate;
   pointer-events: none;
+  z-index: 100;
 }
 
 .cursor::after {
