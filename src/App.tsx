@@ -1,4 +1,4 @@
-import React, { lazy, Suspense, useEffect, useRef } from "react";
+import React, { useState, Suspense, useEffect, useRef } from "react";
 import "./App.sass";
 import "./cursorStyle.scss";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
@@ -7,6 +7,7 @@ import { NavRoutes } from "./routes/routes";
 import { AppContainer } from "./style-components/CommonStyled";
 import { Nav } from "./components/Navbar";
 import { useAppSelector } from "./redux/hooks";
+import DropdownNav from "./components/DropdownNav";
 
 const LazyComponents = (e: React.LazyExoticComponent<React.FC<{}>>) => {
   let LazyComp = e;
@@ -16,19 +17,25 @@ const LazyComponents = (e: React.LazyExoticComponent<React.FC<{}>>) => {
     </Suspense>
   );
 };
-const router = createBrowserRouter([
-  {
-    path: "/",
-    element: <Nav />,
-    children: NavRoutes.map((e) => ({
-      path: `/${e.pathname.split(" ").join("").toLocaleLowerCase()}`,
-      element: LazyComponents(e.path),
-      errorElement: <ErrorPage />,
-    })),
-  },
-]);
 
 const App: React.FC = (): JSX.Element => {
+  const [showDropNav, setShowDropNav] = useState(false);
+  const router = createBrowserRouter([
+    {
+      path: "/",
+      element: (
+        <>
+          <Nav />
+          {showDropNav && <DropdownNav />}
+        </>
+      ),
+      children: NavRoutes.map((e) => ({
+        path: `/${e.pathname.split(" ").join("").toLocaleLowerCase()}`,
+        element: LazyComponents(e.path),
+        errorElement: <ErrorPage />,
+      })),
+    },
+  ]);
   const cursorRef = useRef<HTMLDivElement | null>(null);
   const appRef = useRef<HTMLDivElement | null>(null);
   const headerRef = useAppSelector(
@@ -66,11 +73,19 @@ const App: React.FC = (): JSX.Element => {
   useEffect(() => {
     appRef.current!.onscroll = (e: any) => {
       if (Math.floor(e.target.scrollTop) > 98) {
-        headerRef.style.transition = "2s linear";
-        headerRef.style.background =
-          "radial-gradient(ellipse at top, #1B2735 0%, #090A0F 100%)";
+        headerRef.style.transform = `translateX(${
+          Math.floor(e.target.scrollTop) + 1
+        }rem)`;
+        if (Math.floor(e.target.scrollTop) > 100) {
+          headerRef.style.display = "none";
+        }
+        setShowDropNav(true);
+        headerRef.style.transition = "1s ease-in-out";
       } else {
-        headerRef.style.background = "none";
+        headerRef.style.transform = `translateX(0px)`;
+        setShowDropNav(false);
+        headerRef.style.display = "block";
+        headerRef.style.transition = "0.5s ease-in-out";
       }
     };
   }, [headerRef]);

@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@ant-design/icons": "^5.2.6",
     "@headlessui/react": "^1.7.17",
     "@heroicons/react": "^2.0.18",
     "@react-spring/web": "^9.7.3",
@@ -15,6 +16,7 @@
     "@types/react": "^18.0.0",
     "@types/react-dom": "^18.0.0",
     "@types/react-redux": "^7.1.26",
+    "antd": "^5.9.0",
     "axios": "^1.4.0",
     "framer-motion": "^10.16.2",
     "react": "^18.2.0",
